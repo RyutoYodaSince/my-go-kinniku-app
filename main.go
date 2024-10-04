@@ -1,0 +1,47 @@
+package main
+
+import (
+    "database/sql"
+    "fmt"
+    "log"
+    "net/http"
+    "os"
+    "time"
+
+    "myapp/handlers"
+    _ "github.com/lib/pq"
+)
+
+func main() {
+    // データベース接続の設定
+    dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
+        os.Getenv("DB_HOST"),
+        os.Getenv("DB_USER"),
+        os.Getenv("DB_PASSWORD"),
+        os.Getenv("DB_NAME"))
+
+    // データベース接続の初期化
+    var err error
+    for i := 0; i < 30; i++ {
+        handlers.DB, err = sql.Open("postgres", dsn)
+        if err == nil {
+            err = handlers.DB.Ping()
+            if err == nil {
+                break
+            }
+        }
+        log.Printf("データベース接続を試行中... (%d/30)", i+1)
+        time.Sleep(2 * time.Second)
+    }
+    if err != nil {
+        log.Fatalf("データベース接続に失敗しました: %v", err)
+    }
+    defer handlers.DB.Close()
+
+    log.Println("サーバーがポート8080で起動しています...")
+    http.HandleFunc("/", handlers.ShowRecords)
+    http.HandleFunc("/add", handlers.AddRecord)
+    if err := http.ListenAndServe(":8080", nil); err != nil {
+        log.Fatal(err)
+    }
+}

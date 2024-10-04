@@ -1,37 +1,29 @@
 version: '3'
 
 services:
-  tidb:
-    image: pingcap/tidb:latest
+  db:
+    image: postgres:13
     environment:
-      - TIDB_ROOT_PASSWORD=strongpassword      # TiDBのルートパスワード
+      - POSTGRES_DB=workoutdb
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=strongpassword
     volumes:
-      - tidb_data:/var/lib/mysql               # データ永続化
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # DB初期化SQL
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "4000:4000"                            # TiDBがリッスンするポート
-    networks:
-      - app-network
+      - "5432:5432"
 
   go-app:
     build: .
     depends_on:
-      - tidb                                  # TiDB起動後にGoアプリが起動
+      - db
     environment:
-      DB_HOST: tidb
-      DB_NAME: kinnikudb
-      DB_USER: root
-      DB_PASSWORD: strongpassword
-    volumes:
-      - .:/app                                # ソースコードをコンテナにコピー
+      - DB_HOST=db
+      - DB_NAME=workoutdb
+      - DB_USER=root
+      - DB_PASSWORD=strongpassword
     ports:
-      - "8080:8080"                           # Goアプリケーションのポート
-    networks:
-      - app-network
+      - "8080:8080"
 
 volumes:
-  tidb_data:
-
-networks:
-  app-network:
-    driver: bridge
+  postgres_data:
