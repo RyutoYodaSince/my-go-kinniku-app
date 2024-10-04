@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  tidb:
+    image: pingcap/tidb:latest
+    environment:
+      - TIDB_ROOT_PASSWORD=strongpassword      # TiDBのルートパスワード
+    volumes:
+      - tidb_data:/var/lib/mysql               # データ永続化
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # DB初期化SQL
+    ports:
+      - "4000:4000"                            # TiDBがリッスンするポート
+    networks:
+      - app-network
+
+  go-app:
+    build: .
+    depends_on:
+      - tidb                                  # TiDB起動後にGoアプリが起動
+    environment:
+      DB_HOST: tidb
+      DB_NAME: kinnikudb
+      DB_USER: root
+      DB_PASSWORD: strongpassword
+    volumes:
+      - .:/app                                # ソースコードをコンテナにコピー
+    ports:
+      - "8080:8080"                           # Goアプリケーションのポート
+    networks:
+      - app-network
+
+volumes:
+  tidb_data:
+
+networks:
+  app-network:
+    driver: bridge
