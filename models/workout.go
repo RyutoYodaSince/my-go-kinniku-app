@@ -4,6 +4,7 @@ package models
 type WorkoutRecord struct {
 	ID       int    // レコードID
 	Exercise string // 種目（例: スクワット）
+	Weight   int    // 重量（kg）
 	Reps     int    // レップ数（回数）
 	Sets     int    // セット数
 	Date     string // 記録の日付

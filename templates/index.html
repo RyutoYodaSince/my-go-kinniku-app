@@ -3,14 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>筋トレ記録</title>
+    <title>GoTrain-筋トレ記録</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        form {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 50%;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <h1>筋トレ記録</h1>
-    <table border="1">
+    <h1>GoTrain-筋トレ記録</h1>
+    <table>
         <tr>
             <th>ID</th>
             <th>エクササイズ</th>
+            <th>重量 (kg)</th>
             <th>回数</th>
             <th>セット数</th>
             <th>日付</th>
@@ -19,6 +92,7 @@
         <tr>
             <td>{{.ID}}</td>
             <td>{{.Exercise}}</td>
+            <td>{{.Weight}} kg</td> <!-- 重量の後に "kg" を追加 -->
             <td>{{.Reps}}</td>
             <td>{{.Sets}}</td>
             <td>{{.Date}}</td>
@@ -30,6 +104,8 @@
     <form action="/add" method="POST">
         <label for="exercise">エクササイズ:</label>
         <input type="text" name="exercise" id="exercise" required><br>
+        <label for="weight">重量 (kg):</label>
+        <input type="number" name="weight" id="weight" required><br>
         <label for="reps">回数:</label>
         <input type="number" name="reps" id="reps" required><br>
         <label for="sets">セット数:</label>
