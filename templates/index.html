@@ -75,6 +75,20 @@
             margin: 10px 0;
             text-align: left;
         }
+
+        .download-link {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .download-link:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -82,7 +96,7 @@
     <table>
         <tr>
             <th>ID</th>
-            <th>エクササイズ</th>
+            <th>種目</th>
             <th>重量 (kg)</th>
             <th>回数</th>
             <th>セット数</th>
@@ -92,7 +106,7 @@
         <tr>
             <td>{{.ID}}</td>
             <td>{{.Exercise}}</td>
-            <td>{{.Weight}} kg</td> <!-- 重量の後に "kg" を追加 -->
+            <td>{{.Weight}} kg</td>
             <td>{{.Reps}}</td>
             <td>{{.Sets}}</td>
             <td>{{.Date}}</td>
@@ -100,9 +114,13 @@
         {{end}}
     </table>
 
+    <p>
+        <a href="/download" class="download-link">CSVでダウンロード</a>
+    </p>
+
     <h2>新しいトレーニング記録を追加</h2>
     <form action="/add" method="POST">
-        <label for="exercise">エクササイズ:</label>
+        <label for="exercise">種目:</label>
         <input type="text" name="exercise" id="exercise" required><br>
         <label for="weight">重量 (kg):</label>
         <input type="number" name="weight" id="weight" required><br>
